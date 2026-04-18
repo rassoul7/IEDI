@@ -1471,25 +1471,60 @@
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
 
-    /* ============================================
-       RESPONSIVE
+/* ============================================
+       RESPONSIVE (Version Optimisée)
     ============================================ */
+    
     @media (max-width: 1024px) {
       .about-grid,
       .format-grid,
       .faq-layout { grid-template-columns: 1fr; }
-
       .themes-grid { grid-template-columns: 1fr 1fr; }
-
       .footer-grid { grid-template-columns: 1fr 1fr; }
-
       .about-visual { order: -1; }
-
       .faq-sidebar { position: static; }
 
       /* Timeline stays alternating but slightly tighter */
       .timeline-track::before { left: 50%; }
       .timeline-step { grid-template-columns: 1fr 52px 1fr; }
+    }
+
+    /* ⚠️ DÉPLACÉ ICI : 768px doit venir avant 640px ! */
+    @media (max-width: 768px) {
+      /* Optimisation des textes et espaces pour tablette/mobile */
+      h1 { font-size: 2.5rem !important; line-height: 1.1; }
+      h2 { font-size: 2rem !important; }
+      .section { padding: 3rem 5%; } /* 5rem c'était trop grand pour mobile */
+
+      /* Menu mobile */
+      .nav-links { display: none; }
+      .menu-toggle { display: flex; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 68px; left: 0; right: 0;
+        background: rgba(4,16,31,0.97);
+        backdrop-filter: blur(20px);
+        padding: 2rem;
+        border-bottom: 1px solid var(--border);
+        gap: 1.5rem;
+      }
+
+      /* Grilles passent sur 1 colonne */
+      .themes-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .member-row { grid-template-columns: auto 1fr; }
+      .member-row input:last-child { grid-column: 2; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+
+      /* Ajustement des stats et formulaire */
+      .about-stat-row { grid-template-columns: repeat(3, 1fr); }
+      .form-card { padding: 2rem 1.5rem; }
+
+      /* Empêche le zoom auto sur iPhone quand on clique sur un input */
+      input, select, textarea { font-size: 16px !important; }
     }
 
     @media (max-width: 640px) {
@@ -1518,46 +1553,18 @@
       .timeline-spacer { display: none !important; }
     }
 
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .menu-toggle { display: flex; }
-
-      .nav-links.open {
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        top: 68px; left: 0; right: 0;
-        background: rgba(4,16,31,0.97);
-        backdrop-filter: blur(20px);
-        padding: 2rem;
-        border-bottom: 1px solid var(--border);
-        gap: 1.5rem;
-      }
-
-      .themes-grid { grid-template-columns: 1fr; }
-
-      .form-row { grid-template-columns: 1fr; }
-
-      .member-row { grid-template-columns: auto 1fr; }
-      .member-row input:last-child { grid-column: 2; }
-
-      .footer-grid { grid-template-columns: 1fr; }
-
-      .footer-bottom { flex-direction: column; text-align: center; }
-
-      .section { padding: 5rem 5%; }
-
-      .about-stat-row { grid-template-columns: repeat(3, 1fr); }
-
-      .form-card { padding: 2rem 1.5rem; }
-    }
-
     @media (max-width: 480px) {
-      .countdown { gap: 0.5rem; }
+      /* Ajustements pour très petits écrans */
+      h1 { font-size: 2rem !important; }
+      .section { padding: 2rem 5%; } /* On réduit encore l'espace vide */
+      
+      .countdown { gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
       .countdown-item { min-width: 60px; }
       .countdown-num { font-size: 2rem; }
-      .hero-btns { flex-direction: column; align-items: center; }
+      
+      .hero-btns { flex-direction: column; align-items: center; width: 100%; gap: 10px; }
       .btn { width: 100%; justify-content: center; }
+      
       .about-stat-row { grid-template-columns: 1fr 1fr; }
     }
   </style>
