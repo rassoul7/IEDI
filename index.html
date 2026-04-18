@@ -895,39 +895,47 @@
 
     .timeline-track {
       position: relative;
-      max-width: 800px;
+      max-width: 860px;
       margin: 0 auto;
     }
 
-    /* Center line */
+    /* Center vertical line */
     .timeline-track::before {
       content: '';
       position: absolute;
-      top: 0; bottom: 0;
+      top: 24px; bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
       width: 2px;
-      background: linear-gradient(to bottom, transparent, var(--blue) 10%, var(--blue) 90%, transparent);
-      opacity: 0.35;
+      background: linear-gradient(to bottom, transparent, var(--blue) 8%, var(--blue) 92%, transparent);
+      opacity: 0.3;
     }
 
+    /* Grid-based alternating layout */
     .timeline-step {
-      display: flex;
-      gap: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 64px 1fr;
+      gap: 0;
       align-items: center;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
       position: relative;
     }
 
-    .timeline-step:nth-child(odd) { flex-direction: row; }
-    .timeline-step:nth-child(even) { flex-direction: row-reverse; }
+    /* Odd: card LEFT, dot CENTER, empty RIGHT */
+    .timeline-step:nth-child(odd) .timeline-card  { grid-column: 1; text-align: right; padding-right: 2rem; }
+    .timeline-step:nth-child(odd) .timeline-dot-wrapper { grid-column: 2; }
+    .timeline-step:nth-child(odd) .timeline-spacer { grid-column: 3; }
+
+    /* Even: empty LEFT, dot CENTER, card RIGHT */
+    .timeline-step:nth-child(even) .timeline-spacer { grid-column: 1; }
+    .timeline-step:nth-child(even) .timeline-dot-wrapper { grid-column: 2; }
+    .timeline-step:nth-child(even) .timeline-card  { grid-column: 3; text-align: left; padding-left: 2rem; }
 
     .timeline-card {
-      flex: 1;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 1.5rem;
+      padding: 1.4rem 1.5rem;
       transition: var(--transition);
     }
 
@@ -957,10 +965,11 @@
     }
 
     .timeline-dot-wrapper {
-      flex-shrink: 0;
-      width: 48px;
       display: flex;
       justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 2;
     }
 
     .timeline-dot {
@@ -972,8 +981,6 @@
       align-items: center;
       justify-content: center;
       font-size: 1.2rem;
-      z-index: 1;
-      position: relative;
       box-shadow: 0 0 0 6px rgba(26,115,232,0.08);
     }
 
@@ -982,7 +989,7 @@
       box-shadow: 0 0 0 8px rgba(26,115,232,0.15), 0 4px 20px var(--blue-glow);
     }
 
-    .timeline-spacer { flex: 1; }
+    .timeline-spacer { min-height: 1px; }
 
     /* ============================================
        FORMULAIRE
@@ -1480,11 +1487,35 @@
 
       .faq-sidebar { position: static; }
 
-      .timeline-track::before { left: 24px; }
-      .timeline-step,
-      .timeline-step:nth-child(even) { flex-direction: row; }
-      .timeline-spacer { display: none; }
-      .timeline-dot-wrapper { width: 48px; }
+      /* Timeline stays alternating but slightly tighter */
+      .timeline-track::before { left: 50%; }
+      .timeline-step { grid-template-columns: 1fr 52px 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      /* Timeline collapses to single column on small screens */
+      .timeline-track::before {
+        left: 24px;
+        transform: none;
+      }
+      .timeline-step {
+        grid-template-columns: 52px 1fr !important;
+        grid-template-rows: auto;
+      }
+      .timeline-step:nth-child(odd) .timeline-card,
+      .timeline-step:nth-child(even) .timeline-card {
+        grid-column: 2 !important;
+        grid-row: 1;
+        text-align: left !important;
+        padding-left: 1.2rem !important;
+        padding-right: 1.2rem !important;
+      }
+      .timeline-step:nth-child(odd) .timeline-dot-wrapper,
+      .timeline-step:nth-child(even) .timeline-dot-wrapper {
+        grid-column: 1 !important;
+        grid-row: 1;
+      }
+      .timeline-spacer { display: none !important; }
     }
 
     @media (max-width: 768px) {
@@ -1566,7 +1597,7 @@
 
     <div class="hero-badge">
       <span class="hero-badge-dot"></span>
-      Compétition Ouverte · ESP Dakar · 2025
+      Compétition Ouverte · ESP Dakar · 2026
     </div>
 
     <h1 class="hero-title">
@@ -1657,7 +1688,7 @@
         </h2>
         <p class="reveal reveal-delay-2">
           Le <strong style="color:var(--white);">ISOC ESP Digital Inclusion Challenge</strong> est une compétition 
-          organisée par le chapitre ISOC de l'École Supérieure Polytechnique de Dakar, 
+          organisée par le club ISOC de l'École Supérieure Polytechnique de Dakar, 
           ouverte à tous les étudiants autour des enjeux d'inclusion numérique au Sénégal.
         </p>
         <p class="reveal reveal-delay-2">
@@ -2134,7 +2165,7 @@
           </div>
         </div>
         <p class="footer-brand-desc">
-          Chapitre étudiant de l'Internet Society à l'École Supérieure Polytechnique de Dakar. 
+          Club étudiant de l'Internet Society à l'École Supérieure Polytechnique de Dakar. 
           Construire un internet ouvert, inclusif et accessible pour tous.
         </p>
         <div class="footer-socials">
@@ -2169,10 +2200,9 @@
         <h4>Ressources</h4>
         <div class="footer-links">
           <a href="#">Guide du participant</a>
-          <a href="#">Règlement officiel</a>
-          <a href="#">Template pitch deck</a>
-          <a href="#">ISOC Global</a>
-          <a href="#">ESP Dakar</a>
+          <a href="https://www.canva.com/presentations/templates/pitch-deck/">Template pitch deck</a>
+          <a href="https://www.internetsociety.org">ISOC Global</a>
+          <a href="https://www.esp.sn/">ESP Dakar</a>
         </div>
       </div>
 
@@ -2180,19 +2210,18 @@
         <h4>Contact</h4>
         <div class="footer-links">
           <a href="mailto:isoc@esp.sn">isoc@esp.sn</a>
-          <a href="#">WhatsApp Group</a>
-          <a href="#">Signaler un problème</a>
+          <a href="https://chat.whatsapp.com/HUwRemkFo08IOaPuOR9sq3?mode=gi_t">WhatsApp Group</a>
         </div>
         <div style="margin-top:1.5rem;padding:1rem;background:rgba(26,115,232,0.06);border:1px solid rgba(26,115,232,0.15);border-radius:10px;">
           <div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:4px;">Clôture inscriptions</div>
-          <div style="font-size:0.9rem;font-weight:600;color:var(--gold);">Mi-mai 2025</div>
+          <div style="font-size:0.9rem;font-weight:600;color:var(--gold);">Mi-mai 2026</div>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <span>© 2025 ISOC ESP · ESP Dakar. Made with ❤️ by & for students.</span>
-      <span>Challenge organisé par <a href="#">Internet Society ESP Chapter</a></span>
+      <span>© 2026 ISOC ESP · ESP Dakar. Made with ❤️ by & for students.</span>
+      <span>Challenge organisé par <a href="#">Internet Society ESP</a></span>
     </div>
   </footer>
 
@@ -2239,7 +2268,7 @@
     // ============================================
     // COUNTDOWN TIMER
     // ============================================
-    const deadline = new Date('2025-05-15T23:59:59');  // Mi-mai
+    const deadline = new Date('2026-05-15T23:59:59');  // Mi-mai 2026
 
     function updateCountdown() {
       const now = new Date();
