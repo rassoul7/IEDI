@@ -1570,6 +1570,7 @@
   </style>
 </head>
 <body>
+
   <!-- ============================================
        NAVBAR
   ============================================ -->
@@ -2258,8 +2259,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client
-const SUPABASE_URL = 'https://iertdchcsvupttjksftx.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_IRHLwsyeZR6dPJRzKX4eLw_aD-4H7dy';
+const SUPABASE_URL = 'https://your-project.supabase.co';
+const SUPABASE_ANON_KEY = 'your-anon-key';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -2481,7 +2482,6 @@ export function initFormHandler() {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', initFormHandler);
-
     // ============================================
     // NAVBAR : Sticky + Scroll + Mobile Toggle
     // ============================================
