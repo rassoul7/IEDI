@@ -2714,7 +2714,8 @@
 
       } catch (err) {
         console.error('Submission error:', err);
-        showToast('❌ Une erreur inattendue est survenue. Réessaie dans quelques instants.', 'error');
+        const msg = err?.message || err?.error_description || JSON.stringify(err) || 'Erreur inconnue';
+        showToast(`❌ ${msg}`, 'error');
       } finally {
         setLoading(false);
       }
