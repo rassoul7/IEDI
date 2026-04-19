@@ -2573,28 +2573,19 @@
         return;
       }
 
-      // ✅ Formulaire valide — on envoie
+// ✅ Formulaire valide — on envoie
       setLoading(true);
 
       try {
         const members = collectMembers(memberCount);
         const leaderName = `${members[0]?.prenom} ${members[0]?.nom}`.trim();
 
+        // Récupérer le texte exact du thème sélectionné (évite le crash si themeLabels n'existe pas)
+        const themeSelect = document.getElementById('theme');
+        const themeText = themeSelect.options[themeSelect.selectedIndex]?.text || theme;
+
         // ------------------------------------------------
         // 1. SUPABASE — Flow multi-tables selon le schéma réel
-        //
-        // Schéma :
-        //  registrations  → 1 entrée par personne (email unique)
-        //  teams          → team_name + team_leader_id (FK → registrations.id)
-        //  team_members   → junction team_id + registration_id
-        //  activity_logs  → registration_id + action + details JSONB
-        //
-        // Stratégie :
-        //  → Seul le chef d'équipe crée une registration complète
-        //  → Les autres membres sont stockés en JSONB dans activity_logs
-        //  → La thématique du challenge va dans `notes`
-        //  → La description du projet va dans `message`
-        //  → expertise_domain = compétence technique du chef (skill)
         // ------------------------------------------------
 
         // Map thématique → expertise_domain enum
@@ -2604,8 +2595,8 @@
           impact:          'other'
         };
 
-        // Étape A — Insérer le chef d'équipe dans registrations
-        const { data: regData, error: regError } = await db
+        // Étape A — Insérer le chef d'équipe dans registrations (On utilise 'supabase' et non 'db')
+        const { data: regData, error: regError } = await supabase
           .from('registrations')
           .insert([{
             full_name:        leaderName,
@@ -2613,18 +2604,17 @@
             phone:            phone,
             expertise_domain: domainMap[theme] || 'other',
             message:          desc,
-            notes:            `Thématique challenge : ${themeLabels[theme]} | Équipe : ${teamName} | ${memberCount} membre(s)`
+            notes:            `Thématique challenge : ${themeText} | Équipe : ${teamName} | ${memberCount} membre(s)`
           }])
           .select('id')
           .single();
 
         if (regError) {
           console.error('Erreur registrations:', regError);
-          // Email déjà utilisé ?
           if (regError.code === '23505') {
-            showToast('❌ Cet email est déjà inscrit au challenge.', 'error');
+            alert('❌ Cet email est déjà inscrit au challenge.'); // Remplace par showToast si tu as la fonction
           } else {
-            showToast(`❌ Erreur inscription : ${regError.message}`, 'error');
+            alert(`❌ Erreur inscription : ${regError.message}`);
           }
           setLoading(false);
           return;
@@ -2633,7 +2623,7 @@
         const leaderId = regData.id;
 
         // Étape B — Créer l'équipe dans teams
-        const { data: teamData, error: teamError } = await db
+        const { data: teamData, error: teamError } = await supabase
           .from('teams')
           .insert([{
             team_name:      teamName,
@@ -2644,7 +2634,7 @@
 
         if (teamError) {
           console.error('Erreur teams:', teamError);
-          showToast(`❌ Erreur création équipe : ${teamError.message}`, 'error');
+          alert(`❌ Erreur création équipe : ${teamError.message}`);
           setLoading(false);
           return;
         }
@@ -2652,7 +2642,7 @@
         const teamId = teamData.id;
 
         // Étape C — Lier le chef à l'équipe dans team_members
-        await db.from('team_members').insert([{
+        await supabase.from('team_members').insert([{
           team_id:         teamId,
           registration_id: leaderId,
           role:            'leader'
@@ -2666,19 +2656,18 @@
           is_leader:  m.is_leader
         }));
 
-        await db.from('activity_logs').insert([{
+        await supabase.from('activity_logs').insert([{
           registration_id: leaderId,
           action:          'team_registered',
           details: {
             team_id:      teamId,
             team_name:    teamName,
-            theme:        themeLabels[theme],
+            theme:        themeText,
             member_count: memberCount,
             members:      allMembersDetails,
             submitted_at: new Date().toISOString()
           }
         }]);
-
         // ------------------------------------------------
         // 2. EMAILJS — Envoyer le mail de confirmation
         // ------------------------------------------------
