@@ -12,6 +12,7 @@
   <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
   <style>
     /* ============================================
@@ -2596,7 +2597,7 @@
         };
 
         // Étape A — Insérer le chef d'équipe dans registrations (On utilise 'supabase' et non 'db')
-        const { data: regData, error: regError } = await supabase
+        const { data: regData, error: regError } = await db
           .from('registrations')
           .insert([{
             full_name:        leaderName,
@@ -2623,7 +2624,7 @@
         const leaderId = regData.id;
 
         // Étape B — Créer l'équipe dans teams
-        const { data: teamData, error: teamError } = await supabase
+        const { data: teamData, error: teamError } = await db
           .from('teams')
           .insert([{
             team_name:      teamName,
