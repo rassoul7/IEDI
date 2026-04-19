@@ -2391,17 +2391,20 @@
     // ============================================
     const memberCountSelect = document.getElementById('memberCount');
     const membersContainer = document.getElementById('members-container');
-    const girlWrapper = document.getElementById('confirmGirl-wrapper');
-    const confirmGirl = document.getElementById('confirmGirl');
-          if (count <= 1) {
-        girlWrapper.style.display = 'none';
-  confirmGirl.checked = false;
-} else {
-  girlWrapper.style.display = '';
-}
+    
 
     memberCountSelect.addEventListener('change', function () {
       const count = parseInt(this.value) || 0;
+
+      const girlWrapper = document.getElementById('confirmGirl-wrapper');
+      const confirmGirlCb = document.getElementById('confirmGirl');
+      if (count <= 1) {
+        girlWrapper.style.display = 'none';
+        confirmGirlCb.checked = false;
+      } else {
+        girlWrapper.style.display = '';
+  }
+
       membersContainer.innerHTML = '';
 
       if (!count) {
