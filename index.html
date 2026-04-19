@@ -11,6 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <!-- Lucide Icons -->
 
   <style>
     /* ============================================
@@ -1192,6 +1193,28 @@
       box-shadow: 0 10px 40px rgba(26,115,232,0.55);
     }
 
+    /* Lucide icons inherit color + stroke */
+    [data-lucide] {
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .theme-icon [data-lucide] { stroke: currentColor; }
+    .theme-card-1 .theme-icon { color: #7ab9f5; }
+    .theme-card-2 .theme-icon { color: var(--gold); }
+    .theme-card-3 .theme-icon { color: var(--orange); }
+
+    .rule-icon [data-lucide]           { color: var(--blue); }
+    .about-highlight-icon [data-lucide]{ color: var(--blue); }
+    .timeline-dot [data-lucide]        { color: var(--text); }
+    .timeline-step.active .timeline-dot [data-lucide] { color: #fff; }
+    .modal-icon [data-lucide]          { color: var(--gold); stroke-width: 1.5; }
+    .team-avatar [data-lucide]         { color: var(--text-dim); }
+    .team-avatar.required [data-lucide]{ color: var(--gold); }
+
     .btn-submit:disabled {
       opacity: 0.7;
       cursor: not-allowed;
@@ -1652,7 +1675,7 @@
     </p>
 
     <div class="countdown-wrapper reveal">
-      <p class="countdown-label">⏳ Clôture des inscriptions dans</p>
+      <p class="countdown-label"><i data-lucide="timer" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;"></i> Clôture des inscriptions dans</p>
       <div class="countdown">
         <div class="countdown-item">
           <span class="countdown-num" id="cd-days">00</span>
@@ -1719,7 +1742,7 @@
             </div>
           </div>
         </div>
-        <div class="about-badge-floating">🌍 ESP · Dakar, Sénégal</div>
+        <div class="about-badge-floating"><i data-lucide="globe" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;"></i> ESP · Dakar, Sénégal</div>
       </div>
 
       <div class="about-text">
@@ -1739,19 +1762,19 @@
         </p>
         <div class="about-highlights reveal reveal-delay-3">
           <div class="about-highlight">
-            <div class="about-highlight-icon">🎯</div>
+            <div class="about-highlight-icon"><i data-lucide="target" style="width:18px;height:18px;display:inline-block;vertical-align:middle;"></i></div>
             <span>Concevoir des projets à impact direct sur les communautés</span>
           </div>
           <div class="about-highlight">
-            <div class="about-highlight-icon">🤝</div>
+            <div class="about-highlight-icon"><i data-lucide="handshake" style="width:18px;height:18px;display:inline-block;vertical-align:middle;"></i></div>
             <span>Favoriser la diversité et l'inclusion au sein des équipes</span>
           </div>
           <div class="about-highlight">
-            <div class="about-highlight-icon">🚀</div>
+            <div class="about-highlight-icon"><i data-lucide="rocket" style="width:18px;height:18px;display:inline-block;vertical-align:middle;"></i></div>
             <span>Développer tes compétences en présentation et en pitch</span>
           </div>
           <div class="about-highlight">
-            <div class="about-highlight-icon">🏆</div>
+            <div class="about-highlight-icon"><i data-lucide="trophy" style="width:18px;height:18px;display:inline-block;vertical-align:middle;"></i></div>
             <span>Être reconnu au sein de la communauté ISOC ESP</span>
           </div>
         </div>
@@ -1776,7 +1799,7 @@
       <div class="theme-card theme-card-1 reveal">
         <div class="theme-glow"></div>
         <div class="theme-num">01</div>
-        <span class="theme-icon">📡</span>
+        <span class="theme-icon"><i data-lucide="radio" style="width:36px;height:36px;display:inline-block;vertical-align:middle;"></i></span>
         <h3>Fracture Numérique</h3>
         <p>
           Analyser et proposer des solutions concrètes pour réduire les inégalités d'accès 
@@ -1788,7 +1811,7 @@
       <div class="theme-card theme-card-2 reveal reveal-delay-1">
         <div class="theme-glow"></div>
         <div class="theme-num">02</div>
-        <span class="theme-icon">📱</span>
+        <span class="theme-icon"><i data-lucide="smartphone" style="width:36px;height:36px;display:inline-block;vertical-align:middle;"></i></span>
         <h3>Sensibilisation Digitale</h3>
         <p>
           Concevoir des programmes, campagnes ou outils pour éduquer et sensibiliser 
@@ -1800,7 +1823,7 @@
       <div class="theme-card theme-card-3 reveal reveal-delay-2">
         <div class="theme-glow"></div>
         <div class="theme-num">03</div>
-        <span class="theme-icon">🌱</span>
+        <span class="theme-icon"><i data-lucide="sprout" style="width:36px;height:36px;display:inline-block;vertical-align:middle;"></i></span>
         <h3>Projets à Impact Communautaire</h3>
         <p>
           Développer des solutions numériques qui répondent directement à des besoins locaux : 
@@ -1826,42 +1849,42 @@
 
         <div class="format-rules" style="margin-top:2.5rem;">
           <div class="rule-item reveal">
-            <div class="rule-icon">👥</div>
+            <div class="rule-icon"><i data-lucide="users" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
             <div class="rule-content">
               <h4>Taille de l'équipe</h4>
               <p>Entre 1 et 4 membres par équipe. Ouvert à tous les étudiants, toute école ou université confondue.</p>
             </div>
           </div>
           <div class="rule-item reveal reveal-delay-1">
-            <div class="rule-icon">👩‍💻</div>
+            <div class="rule-icon"><i data-lucide="user-check" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
             <div class="rule-content">
               <h4>Diversité obligatoire</h4>
               <p>Chaque équipe doit inclure <strong style="color:var(--gold);">au minimum 1 membre féminin</strong>. Non négociable.</p>
             </div>
           </div>
           <div class="rule-item reveal reveal-delay-2">
-            <div class="rule-icon">📋</div>
+            <div class="rule-icon"><i data-lucide="clipboard-list" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
             <div class="rule-content">
               <h4>Thématique unique</h4>
               <p>Chaque équipe sélectionne une seule thématique parmi les trois proposées.</p>
             </div>
           </div>
           <div class="rule-item reveal reveal-delay-3">
-            <div class="rule-icon">📄</div>
+            <div class="rule-icon"><i data-lucide="file-text" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
             <div class="rule-content">
               <h4>Livrable attendu</h4>
               <p>Un pitch deck + une présentation orale devant un jury de l'ISOC ESP.</p>
             </div>
           </div>
           <div class="rule-item reveal">
-            <div class="rule-icon">🗓️</div>
+            <div class="rule-icon"><i data-lucide="calendar" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
             <div class="rule-content">
               <h4>Deadline de soumission</h4>
               <p>Les inscriptions ferment à la mi-mai. Ne procrastine pas !</p>
             </div>
           </div>
           <div class="rule-item reveal reveal-delay-1">
-            <div class="rule-icon">🆓</div>
+            <div class="rule-icon"><i data-lucide="gift" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
             <div class="rule-content">
               <h4>Participation gratuite</h4>
               <p>Le challenge est entièrement gratuit et ouvert à tous les étudiants de l'ESP.</p>
@@ -1871,27 +1894,27 @@
       </div>
 
       <div class="format-visual reveal reveal-delay-2">
-        <h3>🏗️ Composition d'équipe</h3>
+        <h3><i data-lucide="layout-panel-top" style="width:20px;height:20px;display:inline-block;vertical-align:middle;margin-right:8px;"></i> Composition d'équipe</h3>
         <div class="team-diagram">
           <div class="team-member">
-            <div class="team-avatar required">👩‍💼</div>
+            <div class="team-avatar required"><i data-lucide="user" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></i></div>
             <span class="team-label" style="color:var(--gold);">Requis ✓</span>
           </div>
           <div class="team-member">
-            <div class="team-avatar">👨‍💻</div>
+            <div class="team-avatar"><i data-lucide="user" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></i></div>
             <span class="team-label">Optionnel</span>
           </div>
           <div class="team-member">
-            <div class="team-avatar">👤</div>
+            <div class="team-avatar"><i data-lucide="user" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></i></div>
             <span class="team-label">Optionnel</span>
           </div>
           <div class="team-member">
-            <div class="team-avatar">👤</div>
+            <div class="team-avatar"><i data-lucide="user" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></i></div>
             <span class="team-label">Optionnel</span>
           </div>
         </div>
         <div class="format-note">
-          <span>⚠️</span>
+          <span><i data-lucide="alert-triangle" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></i></span>
           <span>Au moins <strong>1 membre féminin</strong> est obligatoire dans chaque équipe.</span>
         </div>
         <div style="margin-top:1.5rem;padding:1.2rem;background:rgba(26,115,232,0.06);border-radius:10px;border:1px solid rgba(26,115,232,0.15);">
@@ -1933,12 +1956,12 @@
 
       <div class="timeline-step active reveal">
         <div class="timeline-card">
-          <div class="timeline-date">📣 Phase 1 — Maintenant</div>
+          <div class="timeline-date"><i data-lucide="megaphone" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:5px;"></i> Phase 1 — Maintenant</div>
           <h4>Lancement & Inscriptions</h4>
           <p>Publication du challenge et ouverture des inscriptions pour toutes les équipes de l'ESP.</p>
         </div>
         <div class="timeline-dot-wrapper">
-          <div class="timeline-dot">🚀</div>
+          <div class="timeline-dot"><i data-lucide="rocket" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
         </div>
         <div class="timeline-spacer"></div>
       </div>
@@ -1946,10 +1969,10 @@
       <div class="timeline-step reveal reveal-delay-1">
         <div class="timeline-spacer"></div>
         <div class="timeline-dot-wrapper">
-          <div class="timeline-dot">⏰</div>
+          <div class="timeline-dot"><i data-lucide="alarm-clock" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
         </div>
         <div class="timeline-card">
-          <div class="timeline-date">📅 Phase 2 — Retour Pâques</div>
+          <div class="timeline-date"><i data-lucide="calendar-clock" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:5px;"></i> Phase 2 — Mi-mai</div>
           <h4>Clôture des inscriptions</h4>
           <p>Deadline finale pour soumettre votre équipe et votre thématique. Aucune exception.</p>
         </div>
@@ -1957,12 +1980,12 @@
 
       <div class="timeline-step reveal reveal-delay-2">
         <div class="timeline-card">
-          <div class="timeline-date">⚙️ Phase 3 — Post-clôture</div>
+          <div class="timeline-date"><i data-lucide="settings" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:5px;"></i> Phase 3 — Post-clôture</div>
           <h4>Développement des projets</h4>
           <p>Les équipes travaillent sur leur solution, leur pitch deck et leur stratégie de présentation.</p>
         </div>
         <div class="timeline-dot-wrapper">
-          <div class="timeline-dot">💡</div>
+          <div class="timeline-dot"><i data-lucide="lightbulb" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
         </div>
         <div class="timeline-spacer"></div>
       </div>
@@ -1970,10 +1993,10 @@
       <div class="timeline-step reveal reveal-delay-3">
         <div class="timeline-spacer"></div>
         <div class="timeline-dot-wrapper">
-          <div class="timeline-dot">🎤</div>
+          <div class="timeline-dot"><i data-lucide="mic" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
         </div>
         <div class="timeline-card">
-          <div class="timeline-date">🏟️ Phase 4 — À venir</div>
+          <div class="timeline-date"><i data-lucide="mic" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:5px;"></i> Phase 4 — À venir</div>
           <h4>Présentations & Pitches</h4>
           <p>Les équipes présentent leurs projets devant le jury ISOC ESP. Durée : 10 min + 5 min Q&A.</p>
         </div>
@@ -1981,12 +2004,12 @@
 
       <div class="timeline-step reveal">
         <div class="timeline-card">
-          <div class="timeline-date">🎉 Phase 5 — Final</div>
+          <div class="timeline-date"><i data-lucide="award" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:5px;"></i> Phase 5 — Final</div>
           <h4>Délibération & Résultats</h4>
           <p>Annonce des lauréats, remise des prix et célébration de toutes les équipes participantes.</p>
         </div>
         <div class="timeline-dot-wrapper">
-          <div class="timeline-dot">🏆</div>
+          <div class="timeline-dot"><i data-lucide="trophy" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i></div>
         </div>
         <div class="timeline-spacer"></div>
       </div>
@@ -2011,7 +2034,7 @@
         <form id="registerForm" novalidate>
 
           <!-- INFOS ÉQUIPE -->
-          <div class="form-section-title">🏷️ Informations de l'équipe</div>
+          <div class="form-section-title"><i data-lucide="tag" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;"></i> Informations de l'équipe</div>
 
           <div class="form-row">
             <div class="form-group">
@@ -2033,7 +2056,7 @@
           </div>
 
           <!-- MEMBRES DYNAMIQUES -->
-          <div class="form-section-title">👥 Membres de l'équipe</div>
+          <div class="form-section-title"><i data-lucide="users" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;"></i> Membres de l'équipe</div>
           <div id="members-container">
             <p style="font-size:0.85rem;color:var(--text-dim);font-style:italic;">
               Sélectionnez d'abord le nombre de membres ci-dessus.
@@ -2041,7 +2064,7 @@
           </div>
 
           <!-- CONTACT -->
-          <div class="form-section-title">📬 Contact & Thématique</div>
+          <div class="form-section-title"><i data-lucide="mail" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;"></i> Contact & Thématique</div>
 
           <div class="form-row">
             <div class="form-group">
@@ -2060,15 +2083,15 @@
             <label for="theme">Thématique choisie <span class="required-star">*</span></label>
             <select id="theme" name="theme">
               <option value="">— Choisir une thématique —</option>
-              <option value="fracture">📡 Fracture Numérique</option>
-              <option value="sensibilisation">📱 Sensibilisation Digitale</option>
-              <option value="impact">🌱 Projets à Impact Communautaire</option>
+              <option value="fracture">Fracture Numérique</option>
+              <option value="sensibilisation">Sensibilisation Digitale</option>
+              <option value="impact">Projets à Impact Communautaire</option>
             </select>
             <span class="field-error" id="err-theme">Veuillez choisir une thématique.</span>
           </div>
 
           <!-- PROJET -->
-          <div class="form-section-title">💡 Description du projet</div>
+          <div class="form-section-title"><i data-lucide="lightbulb" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;"></i> Description du projet</div>
 
           <div class="form-group">
             <label for="projectDesc">Description de votre idée <span class="required-star">*</span></label>
@@ -2077,7 +2100,7 @@
           </div>
 
           <!-- CONFIRMATION -->
-          <div class="form-section-title">✅ Confirmations</div>
+          <div class="form-section-title"><i data-lucide="check-square" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;"></i> Confirmations</div>
 
           <div class="form-group">
             <label class="checkbox-group">
@@ -2101,7 +2124,7 @@
           </div>
 
           <button type="submit" class="btn-submit">
-            🚀 Soumettre mon inscription
+            <i data-lucide="send" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:8px;"></i> Soumettre mon inscription
           </button>
 
         </form>
@@ -2261,7 +2284,7 @@
     </div>
 
     <div class="footer-bottom">
-      <span>© 2026 ISOC ESP · ESP Dakar. Made with ❤️ by & for students.</span>
+      <span>© 2026 ISOC ESP · ESP Dakar. Made with <i data-lucide="heart" style="width:14px;height:14px;display:inline-block;vertical-align:middle;color:#e05555;margin:0 2px;"></i> by & for students.</span>
       <span>Challenge organisé par <a href="#">Internet Society ESP</a></span>
     </div>
   </footer>
@@ -2271,7 +2294,7 @@
   ============================================ -->
   <div class="modal-overlay" id="successModal">
     <div class="modal-box">
-      <div class="modal-icon">🎉</div>
+      <div class="modal-icon"><i data-lucide="party-popper" style="width:40px;height:40px;display:inline-block;vertical-align:middle;"></i></div>
       <h3>Inscription envoyée !</h3>
       <p>
         Votre équipe a bien été inscrite au <strong>ISOC ESP Digital Inclusion Challenge</strong>.
@@ -2285,6 +2308,7 @@
   <!-- ============================================
        JAVASCRIPT
   ============================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.396.0/dist/umd/lucide.min.js"></script>
   <script>
     // ============================================
     // NAVBAR : Sticky + Scroll + Mobile Toggle
@@ -2476,7 +2500,7 @@
         submitBtn.innerHTML = '<span class="spinner"></span> Envoi en cours...';
       } else {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '🚀 Soumettre mon inscription';
+        submitBtn.innerHTML = '<i data-lucide="send" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:8px;"></i> Soumettre mon inscription'; lucide.createIcons();
       }
     }
 
@@ -2583,9 +2607,9 @@
         // 2. EMAILJS — Envoyer le mail de confirmation
         // ------------------------------------------------
         const themeLabels = {
-          fracture:        '📡 Fracture Numérique',
-          sensibilisation: '📱 Sensibilisation Digitale',
-          impact:          '🌱 Projets à Impact Communautaire'
+          fracture:        'Fracture Numérique',
+          sensibilisation: 'Sensibilisation Digitale',
+          impact:          'Projets à Impact Communautaire'
         };
 
         const membersList = members
@@ -2642,7 +2666,10 @@
     });
 
     // ============================================
-    // CONFETTI 🎉
+    // Init Lucide icons
+    lucide.createIcons();
+
+    // CONFETTI
     // ============================================
     function launchConfetti() {
       const colors = ['#1a73e8', '#f5a623', '#ff6d35', '#4CAF50', '#fff', '#a78bfa'];
