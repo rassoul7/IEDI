@@ -2642,7 +2642,7 @@
         const teamId = teamData.id;
 
         // Étape C — Lier le chef à l'équipe dans team_members
-        await supabase.from('team_members').insert([{
+        await db.from('team_members').insert([{
           team_id:         teamId,
           registration_id: leaderId,
           role:            'leader'
@@ -2656,7 +2656,7 @@
           is_leader:  m.is_leader
         }));
 
-        await supabase.from('activity_logs').insert([{
+        await db.from('activity_logs').insert([{
           registration_id: leaderId,
           action:          'team_registered',
           details: {
