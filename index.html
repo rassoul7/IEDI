@@ -7,6 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
   <style>
     /* ============================================
@@ -1188,7 +1192,44 @@
       box-shadow: 0 10px 40px rgba(26,115,232,0.55);
     }
 
-    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-submit .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      z-index: 99999;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #fff;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+      max-width: 360px;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.toast-error { background: #c0392b; border: 1px solid rgba(255,80,80,0.3); }
+    .toast.toast-success { background: #1a6b3c; border: 1px solid rgba(80,200,120,0.3); }
 
     /* ============================================
        FAQ
@@ -2372,10 +2413,51 @@
       });
     });
 
+    // ============================================================
+    // ⚙️  CONFIG — REMPLIS CES VALEURS AVEC TES CREDENTIALS
+    // ============================================================
+
+    // 1️⃣  SUPABASE — Récupère ces infos dans ton dashboard Supabase
+    //    Project Settings > API
+    const SUPABASE_URL    = 'https://XXXX.supabase.co';          // ← remplace
+    const SUPABASE_ANON   = 'eyJhbGc...XXXX';                    // ← remplace (anon public key)
+
+    // 2️⃣  EMAILJS — https://dashboard.emailjs.com
+    //    Tu auras besoin de : Public Key, Service ID, Template ID
+    const EMAILJS_PUBLIC_KEY  = 'XXXX_votre_public_key';         // ← remplace
+    const EMAILJS_SERVICE_ID  = 'service_XXXX';                  // ← remplace
+    const EMAILJS_TEMPLATE_ID = 'template_XXXX';                 // ← remplace
+
+    // ============================================================
+    // INIT SDKs
+    // ============================================================
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+    // ============================================
+    // TOAST NOTIFICATIONS
+    // ============================================
+    function showToast(msg, type = 'error') {
+      // Remove existing toast
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+      }, 5000);
+    }
+
     // ============================================
     // FORM VALIDATION & SUBMISSION
     // ============================================
     const form = document.getElementById('registerForm');
+    const submitBtn = form.querySelector('.btn-submit');
 
     function showError(id, show) {
       const el = document.getElementById('err-' + id);
@@ -2388,7 +2470,28 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    form.addEventListener('submit', function (e) {
+    function setLoading(loading) {
+      if (loading) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span> Envoi en cours...';
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '🚀 Soumettre mon inscription';
+      }
+    }
+
+    // Collect member names into an array
+    function collectMembers(count) {
+      const members = [];
+      for (let i = 1; i <= count; i++) {
+        const prenom = (document.getElementById(`member-prenom-${i}`)?.value || '').trim();
+        const nom    = (document.getElementById(`member-nom-${i}`)?.value || '').trim();
+        members.push({ prenom, nom, is_leader: i === 1 });
+      }
+      return members;
+    }
+
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
       let valid = true;
 
@@ -2398,19 +2501,16 @@
       if (!teamName) valid = false;
 
       // Member count
-      const memberCount = document.getElementById('memberCount').value;
+      const memberCount = parseInt(document.getElementById('memberCount').value);
       showError('memberCount', !memberCount);
       if (!memberCount) valid = false;
 
       // Member fields
       const memberFields = document.querySelectorAll('[data-member="true"]');
       memberFields.forEach(f => {
-        if (!f.value.trim()) {
-          f.classList.add('error');
-          valid = false;
-        } else {
-          f.classList.remove('error');
-        }
+        const empty = !f.value.trim();
+        f.classList.toggle('error', empty);
+        if (empty) valid = false;
       });
 
       // Email
@@ -2423,7 +2523,7 @@
       showError('phone', !phone);
       if (!phone) valid = false;
 
-      // Theme
+      // Theme — must not be empty (fixes the enum bug !)
       const theme = document.getElementById('theme').value;
       showError('theme', !theme);
       if (!theme) valid = false;
@@ -2443,17 +2543,80 @@
       showError('confirmRules', !confirmRules);
       if (!confirmRules) valid = false;
 
-      if (valid) {
+      if (!valid) {
+        const firstError = form.querySelector('.error, .field-error.show');
+        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      // ✅ Formulaire valide — on envoie
+      setLoading(true);
+
+      try {
+        const members = collectMembers(memberCount);
+        const leaderName = `${members[0]?.prenom} ${members[0]?.nom}`.trim();
+
+        // ------------------------------------------------
+        // 1. SUPABASE — Insérer l'inscription en base
+        // ------------------------------------------------
+        const { data, error: dbError } = await db
+          .from('inscriptions')           // ← nom de ta table
+          .insert([{
+            team_name:        teamName,
+            member_count:     memberCount,
+            members:          members,            // colonne jsonb
+            email:            email,
+            phone:            phone,
+            expertise_domain: theme,             // ← valeur enum propre : 'fracture' | 'sensibilisation' | 'impact'
+            project_description: desc,
+            submitted_at:     new Date().toISOString()
+          }]);
+
+        if (dbError) {
+          console.error('Supabase error:', dbError);
+          showToast(`❌ Erreur DB : ${dbError.message}`, 'error');
+          setLoading(false);
+          return;
+        }
+
+        // ------------------------------------------------
+        // 2. EMAILJS — Envoyer le mail de confirmation
+        // ------------------------------------------------
+        const themeLabels = {
+          fracture:        '📡 Fracture Numérique',
+          sensibilisation: '📱 Sensibilisation Digitale',
+          impact:          '🌱 Projets à Impact Communautaire'
+        };
+
+        const membersList = members
+          .map((m, idx) => `${idx + 1}. ${m.prenom} ${m.nom}${m.is_leader ? ' (Chef d\'équipe)' : ''}`)
+          .join('\n');
+
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_email:      email,
+          to_name:       leaderName,
+          team_name:     teamName,
+          member_count:  memberCount,
+          members_list:  membersList,
+          theme:         themeLabels[theme] || theme,
+          description:   desc,
+          phone:         phone,
+          reply_to:      'isoc@esp.sn'
+        });
+
+        // ------------------------------------------------
+        // 3. Succès 🎉
+        // ------------------------------------------------
         launchConfetti();
         showModal();
         form.reset();
         membersContainer.innerHTML = '<p style="font-size:0.85rem;color:var(--text-dim);font-style:italic;">Sélectionnez d\'abord le nombre de membres ci-dessus.</p>';
-      } else {
-        // Scroll to first error
-        const firstError = form.querySelector('.error, .field-error.show');
-        if (firstError) {
-          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+
+      } catch (err) {
+        console.error('Submission error:', err);
+        showToast('❌ Une erreur inattendue est survenue. Réessaie dans quelques instants.', 'error');
+      } finally {
+        setLoading(false);
       }
     });
 
@@ -2501,60 +2664,6 @@
       }
     }
   </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-const { createClient } = supabase;
-
-const SUPABASE_URL = 'https://iertdchcsvupttjksftx.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_IRHLwsyeZR6dPJRzKX4eLw_aD-4H7dy';
-
-const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-async function handleFormSubmit(event) {
-  event.preventDefault();
-
-  const form = event.target;
-  const submitBtn = form.querySelector('.btn-submit'); // ⚠️ correction ici
-
-  try {
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Inscription en cours...';
-
-    const formData = {
-      full_name: form.querySelector('input[type="text"]').value.trim(),
-      email: form.querySelector('input[type="email"]').value.trim(),
-      phone: form.querySelector('input[type="tel"]')?.value.trim() || null,
-      expertise_domain: form.querySelector('select').value,
-      message: form.querySelector('textarea').value.trim(),
-      user_agent: navigator.userAgent,
-    };
-
-    const { data, error } = await client
-      .from('registrations')
-      .insert([formData])
-      .select();
-
-    if (error) throw error;
-
-    alert("Inscription réussie ✅");
-    form.reset();
-
-  } catch (err) {
-    console.error(err);
-    alert("Erreur : " + err.message);
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = "S'inscrire";
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.querySelector('#registerForm');
-  if (form) {
-    form.addEventListener('submit', handleFormSubmit);
-  }
-});
-</script>
 </body>
 </html>
